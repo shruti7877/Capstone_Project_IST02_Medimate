@@ -1,0 +1,643 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Healthcare Chatbot</title>
+
+    <!-- Google Fonts link -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@600&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: linear-gradient(90deg, #ad5389, #3c1053);
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            width: 100%;
+            max-width: 900px;
+            margin: 50px auto;
+            background: linear-gradient(45deg, #eecda3, #ef629f);
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+        }
+        h2 {
+            text-align: center;
+            color: #333;
+            font-family: 'Poppins', sans-serif; /* Apply Poppins font */
+            font-weight: bold; /* Make the text bold */
+        }
+        .chatbox {
+            border: 1px solid #ccc;
+            padding: 15px;
+            height: 400px;
+            overflow-y: scroll;
+            background-image: url('bot.jpg'); /* Replace with your image URL */
+            background-size: cover;
+            background-position: center;
+            background-blur: 5px;
+            margin-bottom: 20px;
+            color: white; /* Ensures the text is readable on the background */
+            opacity: 0.9; /* Optional: to create a semi-transparent effect */
+        }
+        .user-input {
+            width: 100%;
+            padding: 10px;
+            margin-top: 10px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+            font-size: 16px;
+        }
+        button {
+            background: linear-gradient(45deg, #dd5689, #f7bb97);
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        button:hover {
+             background: linear-gradient(45deg, #eb3349, #f45c43);
+        }
+        .response {
+            margin-top: 10px;
+            padding: 10px;
+            background-color: rgba(224, 224, 224, 0.5); /* Apply opacity to make it semi-transparent */
+    	    border-radius: 5px;
+            color: #333;
+        }
+        .doctor {
+            color: #0066cc;
+            font-weight: bold;
+        }
+        .appointment-form {
+            display: none;
+            margin-top: 20px;
+            padding: 20px;
+            background-image: url('appoint.jpg'); /* Replace with your image URL */
+            background-size: cover;  /* Ensures the background image covers the entire form */
+            background-position: center;  /* Centers the image */
+            background-blur: 5px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            color: black;  /* Ensures the text stands out on the background */
+        }
+        .appointment-form input,
+        .appointment-form select {
+            padding: 10px;
+            margin: 10px 0;
+            width: 100%;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+        }
+        .appointment-form button {
+            background-color: #008CBA;
+        }
+        .appointment-details {
+            margin-top: 20px;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h2>Welcome to MediMate -Your healthcare chatbot!!! </h2>
+    <div class="chatbox" id="chatbox"></div>
+    <input type="text" class="user-input" id="userInput" placeholder="Enter your symptoms here..." />
+    <button onclick="getResponse()">Get Prediction</button>
+
+    <div class="appointment-form" id="appointmentForm">
+        <h3>Book an Appointment</h3>
+        <form id="appointmentDetailsForm">
+            <input type="text" id="userName" placeholder="Enter your name" required />
+            <input type="date" id="appointmentDate" required />
+            <input type="time" id="appointmentTime" required />
+            <button type="submit">Book Appointment</button>
+        </form>
+    </div>
+
+    <div class="appointment-details" id="appointmentDetails"></div>
+</div>
+
+<script>
+    const diseases = [
+        { "name": "Flu", "symptoms": ["fever", "chills", "cough", "fatigue", "body aches"], "precautions": "Rest, stay hydrated.", "medication": "Paracetamol, Cough Syrup", "diet": "Drink warm fluids", "doctors": ["Dr. A (General Practitioner)", "Dr. B (Infectious Disease Specialist)"] },
+        { "name": "Cold", "symptoms": ["runny nose", "sneezing", "sore throat", "headache"], "precautions": "Rest, drink fluids", "medication": "Pain relievers, Nasal Spray", "diet": "Warm tea", "doctors": ["Dr. C (General Practitioner)", "Dr. D (ENT Specialist)"] },
+        { "name": "Stomach Infection", "symptoms": ["stomach pain", "diarrhea", "nausea", "vomiting"], "precautions": "Drink fluids", "medication": "Antibiotics, Oral Rehydration Salts", "diet": "BRAT Diet", "doctors": ["Dr. E (Gastroenterologist)", "Dr. F (General Physician)"] },
+        { "name": "Pneumonia", "symptoms": ["cough", "fever", "shortness of breath", "fatigue", "chest pain"], "precautions": "Rest, antibiotics", "medication": "Antibiotics, Cough Syrup", "diet": "Warm fluids", "doctors": ["Dr. G (Pulmonologist)", "Dr. H (General Practitioner)"] },
+        { "name": "Diabetes", "symptoms": ["increased thirst", "frequent urination", "fatigue", "blurred vision"], "precautions": "Monitor blood sugar", "medication": "Insulin, Oral Hypoglycemics", "diet": "Low-sugar foods", "doctors": ["Dr. I (Endocrinologist)", "Dr. J (General Practitioner)"] },
+        { "name": "Asthma", "symptoms": ["wheezing", "shortness of breath", "coughing"], "precautions": "Avoid allergens", "medication": "Inhalers", "diet": "Anti-inflammatory foods", "doctors": ["Dr. K (Pulmonologist)", "Dr. L (Allergist)"] },
+        { "name": "Heart Disease", "symptoms": ["chest pain", "shortness of breath", "fatigue"], "precautions": "Avoid high-fat foods", "medication": "Beta-blockers", "diet": "Low-fat foods", "doctors": ["Dr. M (Cardiologist)", "Dr. N (General Physician)"] },
+        { "name": "Hypertension", "symptoms": ["headache", "dizziness", "chest pain"], "precautions": "Monitor blood pressure", "medication": "ACE inhibitors", "diet": "Low-sodium foods", "doctors": ["Dr. O (Cardiologist)", "Dr. P (General Practitioner)"] },
+        { "name": "Migraine", "symptoms": ["severe headache", "nausea", "vomiting"], "precautions": "Rest in dark room", "medication": "Pain relievers", "diet": "Avoid triggers", "doctors": ["Dr. Q (Neurologist)", "Dr. R (General Practitioner)"] },
+        { "name": "Arthritis", "symptoms": ["joint pain", "stiffness", "swelling"], "precautions": "Exercise regularly", "medication": "NSAIDs", "diet": "Anti-inflammatory foods", "doctors": ["Dr. S (Rheumatologist)", "Dr. T (General Practitioner)"] },
+        // Add more diseases as needed, up to 50
+
+	{ "name": "Tuberculosis", "symptoms": ["persistent cough", "fever", "weight loss"], "precautions": "Avoid public places", "medication": "Antibiotics", "diet": "High-protein foods", "doctors": ["Dr. U (Pulmonologist)", "Dr. V (General Practitioner)"] },
+        { "name": "Chronic Bronchitis", "symptoms": ["cough", "mucus", "shortness of breath"], "precautions": "Quit smoking", "medication": "Bronchodilators", "diet": "Warm fluids", "doctors": ["Dr. W (Pulmonologist)", "Dr. X (General Practitioner)"] },
+        { "name": "Epilepsy", "symptoms": ["seizures", "convulsions", "aura"], "precautions": "Avoid triggers", "medication": "Anticonvulsants", "diet": "Ketogenic diet", "doctors": ["Dr. Y (Neurologist)", "Dr. Z (General Practitioner)"] },
+        { "name": "Hepatitis", "symptoms": ["fatigue", "loss of appetite", "yellow skin"], "precautions": "Avoid alcohol", "medication": "Antivirals", "diet": "Low-fat foods", "doctors": ["Dr. AA (Hepatologist)", "Dr. AB (General Practitioner)"] },
+        { "name": "Psoriasis", "symptoms": ["red patches on skin", "itching", "scaly skin"], "precautions": "Moisturize regularly", "medication": "Topical corticosteroids", "diet": "Anti-inflammatory foods", "doctors": ["Dr. AC (Dermatologist)", "Dr. AD (General Practitioner)"] },
+        { "name": "Cystic Fibrosis", "symptoms": ["persistent cough", "wheezing", "digestive issues"], "precautions": "Chest physical therapy", "medication": "Mucus thinners", "diet": "High-calorie foods", "doctors": ["Dr. AE (Pulmonologist)", "Dr. AF (Pediatrician)"] },
+        { "name": "Kidney Stones", "symptoms": ["severe pain", "blood in urine", "frequent urination"], "precautions": "Drink plenty of water", "medication": "Pain relievers", "diet": "Low-oxalate foods", "doctors": ["Dr. AG (Nephrologist)", "Dr. AH (Urologist)"] },
+        // Continue adding diseases as needed...
+// Append the following to the diseases array in your code:
+{
+    "name": "Chickenpox",
+    "symptoms": ["fever", "rash", "itching", "fatigue"],
+    "precautions": "Avoid contact with others, stay hydrated.",
+    "medication": "Antihistamines, Pain relievers",
+    "diet": "Soft, non-spicy foods",
+    "doctors": ["Dr. AK (Pediatrician)", "Dr. AL (Dermatologist)"]
+},
+{
+    "name": "Measles",
+    "symptoms": ["fever", "rash", "cough", "red eyes"],
+    "precautions": "Rest, avoid public places.",
+    "medication": "Fever reducers, Vitamin A supplements",
+    "diet": "Vitamin A-rich foods",
+    "doctors": ["Dr. AM (Pediatrician)", "Dr. AN (Infectious Disease Specialist)"]
+},
+{
+    "name": "Anemia",
+    "symptoms": ["fatigue", "pale skin", "shortness of breath", "dizziness"],
+    "precautions": "Eat iron-rich foods, avoid caffeine during meals.",
+    "medication": "Iron supplements, Vitamin B12",
+    "diet": "Iron-rich foods like spinach, red meat",
+    "doctors": ["Dr. AO (Hematologist)", "Dr. AP (General Practitioner)"]
+},
+{
+    "name": "Conjunctivitis",
+    "symptoms": ["red eyes", "itching", "tearing", "discharge"],
+    "precautions": "Avoid touching eyes, wash hands frequently.",
+    "medication": "Eye drops, antihistamines",
+    "diet": "Hydration-focused diet",
+    "doctors": ["Dr. AQ (Ophthalmologist)", "Dr. AR (General Practitioner)"]
+},
+{
+    "name": "Typhoid",
+    "symptoms": ["fever", "abdominal pain", "weakness", "loss of appetite"],
+    "precautions": "Drink clean water, avoid street food.",
+    "medication": "Antibiotics",
+    "diet": "Soft, easily digestible foods",
+    "doctors": ["Dr. AS (Infectious Disease Specialist)", "Dr. AT (General Practitioner)"]
+},
+// Add similar entries for more diseases.
+{
+    "name": "Malaria",
+    "symptoms": ["fever", "chills", "headache", "nausea"],
+    "precautions": "Use mosquito nets, avoid stagnant water.",
+    "medication": "Antimalarial drugs",
+    "diet": "Hydrating fluids, light meals",
+    "doctors": ["Dr. AU (Infectious Disease Specialist)", "Dr. AV (General Practitioner)"]
+},
+{
+    "name": "Dengue",
+    "symptoms": ["fever", "rash", "joint pain", "fatigue"],
+    "precautions": "Avoid mosquito bites, use repellents.",
+    "medication": "Pain relievers, hydration therapy",
+    "diet": "Papaya leaf juice, high fluids",
+    "doctors": ["Dr. AW (Infectious Disease Specialist)", "Dr. AX (General Practitioner)"]
+},
+{
+    "name": "Chikungunya",
+    "symptoms": ["joint pain", "rash", "fever", "headache"],
+    "precautions": "Use mosquito repellents, stay indoors.",
+    "medication": "Pain relievers, fever reducers",
+    "diet": "Electrolyte-rich fluids, easy-to-digest foods",
+    "doctors": ["Dr. AY (Rheumatologist)", "Dr. AZ (General Practitioner)"]
+},
+{
+    "name": "Gout",
+    "symptoms": ["joint pain", "swelling", "redness"],
+    "precautions": "Avoid purine-rich foods, stay hydrated.",
+    "medication": "NSAIDs, colchicine",
+    "diet": "Low-purine diet",
+    "doctors": ["Dr. BA (Rheumatologist)", "Dr. BB (General Practitioner)"]
+},
+{
+    "name": "Eczema",
+    "symptoms": ["itching", "red patches", "dry skin"],
+    "precautions": "Use moisturizers, avoid triggers.",
+    "medication": "Topical corticosteroids",
+    "diet": "Omega-3-rich foods",
+    "doctors": ["Dr. BC (Dermatologist)", "Dr. BD (Allergist)"]
+},
+{
+    "name": "Hyperthyroidism",
+    "symptoms": ["weight loss", "irritability", "tremors"],
+    "precautions": "Avoid iodine-rich foods, monitor levels.",
+    "medication": "Antithyroid drugs, beta blockers",
+    "diet": "Low-iodine foods",
+    "doctors": ["Dr. BE (Endocrinologist)", "Dr. BF (General Practitioner)"]
+},
+{
+    "name": "Hypothyroidism",
+    "symptoms": ["weight gain", "fatigue", "dry skin"],
+    "precautions": "Regular thyroid function tests.",
+    "medication": "Thyroid hormone replacement",
+    "diet": "Iodine-rich foods",
+    "doctors": ["Dr. BG (Endocrinologist)", "Dr. BH (General Practitioner)"]
+},
+{
+    "name": "COPD",
+    "symptoms": ["shortness of breath", "chronic cough", "wheezing"],
+    "precautions": "Avoid smoking, use air purifiers.",
+    "medication": "Bronchodilators, corticosteroids",
+    "diet": "Anti-inflammatory foods",
+    "doctors": ["Dr. BI (Pulmonologist)", "Dr. BJ (General Practitioner)"]
+},
+{
+    "name": "Parkinson's Disease",
+    "symptoms": ["tremors", "slowed movement", "muscle stiffness"],
+    "precautions": "Regular exercise, occupational therapy.",
+    "medication": "Levodopa, dopamine agonists",
+    "diet": "Antioxidant-rich foods",
+    "doctors": ["Dr. BK (Neurologist)", "Dr. BL (General Practitioner)"]
+},
+{
+    "name": "Osteoporosis",
+    "symptoms": ["bone pain", "fractures", "stooped posture"],
+    "precautions": "Calcium, Vitamin D supplements.",
+    "medication": "Bisphosphonates",
+    "diet": "Calcium and Vitamin D-rich foods",
+    "doctors": ["Dr. BM (Orthopedist)", "Dr. BN (General Practitioner)"]
+},
+{
+    "name": "HIV/AIDS",
+    "symptoms": ["fever", "swollen lymph nodes", "fatigue"],
+    "precautions": "Practice safe sex, avoid sharing needles.",
+    "medication": "Antiretroviral therapy",
+    "diet": "High-protein, high-calorie diet",
+    "doctors": ["Dr. BO (Infectious Disease Specialist)", "Dr. BP (Immunologist)"]
+},
+{
+    "name": "Celiac Disease",
+    "symptoms": ["diarrhea", "bloating", "fatigue"],
+    "precautions": "Avoid gluten-containing foods.",
+    "medication": "Gluten-free diet",
+    "diet": "Gluten-free alternatives",
+    "doctors": ["Dr. BQ (Gastroenterologist)", "Dr. BR (Nutritionist)"]
+},
+{
+    "name": "Liver Cirrhosis",
+    "symptoms": ["fatigue", "jaundice", "abdominal swelling"],
+    "precautions": "Avoid alcohol, regular checkups.",
+    "medication": "Diuretics, antivirals",
+    "diet": "Low-sodium foods",
+    "doctors": ["Dr. BS (Hepatologist)", "Dr. BT (General Practitioner)"]
+},
+{
+    "name": "Urinary Tract Infection (UTI)",
+    "symptoms": ["burning urination", "frequent urination", "pain"],
+    "precautions": "Stay hydrated, maintain hygiene.",
+    "medication": "Antibiotics",
+    "diet": "Cranberry juice, water",
+    "doctors": ["Dr. BU (Urologist)", "Dr. BV (General Practitioner)"]
+},
+{
+    "name": "Lung Cancer",
+    "symptoms": ["persistent cough", "weight loss", "chest pain"],
+    "precautions": "Avoid smoking, early detection.",
+    "medication": "Chemotherapy, radiotherapy",
+    "diet": "High-calorie, nutrient-dense foods",
+    "doctors": ["Dr. BW (Oncologist)", "Dr. BX (Pulmonologist)"]
+},
+{
+    "name": "Hernia",
+    "symptoms": ["bulging", "pain", "discomfort"],
+    "precautions": "Avoid heavy lifting, maintain healthy weight.",
+    "medication": "Surgery",
+    "diet": "High-fiber foods",
+    "doctors": ["Dr. BY (Surgeon)", "Dr. BZ (General Practitioner)"]
+},
+{
+    "name": "Glaucoma",
+    "symptoms": ["vision loss", "eye pain", "halos around lights"],
+    "precautions": "Regular eye exams.",
+    "medication": "Eye drops, surgery",
+    "diet": "Leafy greens, omega-3",
+    "doctors": ["Dr. CA (Ophthalmologist)", "Dr. CB (General Practitioner)"]
+},
+{
+    "name": "Alzheimer's Disease",
+    "symptoms": ["memory loss", "confusion", "difficulty communicating"],
+    "precautions": "Mental exercises, physical activity.",
+    "medication": "Cholinesterase inhibitors",
+    "diet": "Mediterranean diet",
+    "doctors": ["Dr. CC (Neurologist)", "Dr. CD (Geriatrician)"]
+},
+{
+    "name": "Scoliosis",
+    "symptoms": ["curved spine", "back pain", "uneven shoulders"],
+    "precautions": "Postural correction, bracing.",
+    "medication": "Pain relievers",
+    "diet": "Calcium-rich foods",
+    "doctors": ["Dr. CE (Orthopedist)", "Dr. CF (General Practitioner)"]
+},
+{
+    "name": "Sinusitis",
+    "symptoms": ["nasal congestion", "facial pain", "headache"],
+    "precautions": "Avoid allergens, use humidifiers.",
+    "medication": "Decongestants, antibiotics",
+    "diet": "Warm soups, fluids",
+    "doctors": ["Dr. CG (ENT Specialist)", "Dr. CH (General Practitioner)"]
+},
+{
+    "name": "Bronchitis",
+    "symptoms": ["cough", "mucus production", "shortness of breath"],
+    "precautions": "Avoid smoking, stay hydrated.",
+    "medication": "Bronchodilators, cough suppressants",
+    "diet": "Warm fluids, light meals",
+    "doctors": ["Dr. CI (Pulmonologist)", "Dr. CJ (General Practitioner)"]
+},
+{
+    "name": "Tuberculosis",
+    "symptoms": ["persistent cough", "weight loss", "fever"],
+    "precautions": "Cover mouth while coughing, ventilation.",
+    "medication": "Antibiotics",
+    "diet": "High-protein, high-calorie diet",
+    "doctors": ["Dr. CK (Infectious Disease Specialist)", "Dr. CL (Pulmonologist)"]
+},
+{
+    "name": "Acne",
+    "symptoms": ["pimples", "blackheads", "redness"],
+    "precautions": "Keep skin clean, avoid oily products.",
+    "medication": "Topical retinoids, antibiotics",
+    "diet": "Low-glycemic foods",
+    "doctors": ["Dr. CM (Dermatologist)", "Dr. CN (General Practitioner)"]
+},
+{
+    "name": "Psoriasis",
+    "symptoms": ["red patches", "scaly skin", "itching"],
+    "precautions": "Moisturize, avoid triggers.",
+    "medication": "Topical treatments, biologics",
+    "diet": "Anti-inflammatory foods",
+    "doctors": ["Dr. CO (Dermatologist)", "Dr. CP (Rheumatologist)"]
+},
+{
+    "name": "Migraine",
+    "symptoms": ["severe headache", "nausea", "sensitivity to light"],
+    "precautions": "Avoid triggers, stress management.",
+    "medication": "Triptans, pain relievers",
+    "diet": "Magnesium-rich foods",
+    "doctors": ["Dr. CQ (Neurologist)", "Dr. CR (General Practitioner)"]
+},
+{
+    "name": "Conjunctivitis",
+    "symptoms": ["red eyes", "itchiness", "discharge"],
+    "precautions": "Avoid touching eyes, use clean towels.",
+    "medication": "Antibiotic drops",
+    "diet": "Hydrating fluids",
+    "doctors": ["Dr. CS (Ophthalmologist)", "Dr. CT (General Practitioner)"]
+},
+{
+    "name": "Epilepsy",
+    "symptoms": ["seizures", "confusion", "loss of consciousness"],
+    "precautions": "Take medications, avoid stress.",
+    "medication": "Anticonvulsants",
+    "diet": "Ketogenic diet",
+    "doctors": ["Dr. CU (Neurologist)", "Dr. CV (General Practitioner)"]
+},
+{
+    "name": "Vertigo",
+    "symptoms": ["dizziness", "nausea", "balance issues"],
+    "precautions": "Avoid sudden movements, stay hydrated.",
+    "medication": "Antivertigo drugs",
+    "diet": "Low-salt diet",
+    "doctors": ["Dr. CW (ENT Specialist)", "Dr. CX (Neurologist)"]
+},
+{
+    "name": "Asthma",
+    "symptoms": ["wheezing", "shortness of breath", "chest tightness"],
+    "precautions": "Avoid allergens, carry inhaler.",
+    "medication": "Bronchodilators, corticosteroids",
+    "diet": "Omega-3, anti-inflammatory foods",
+    "doctors": ["Dr. CY (Pulmonologist)", "Dr. CZ (Allergist)"]
+},
+{
+    "name": "Anemia",
+    "symptoms": ["fatigue", "pale skin", "shortness of breath"],
+    "precautions": "Eat iron-rich foods, regular checkups.",
+    "medication": "Iron supplements",
+    "diet": "Iron and Vitamin C-rich foods",
+    "doctors": ["Dr. DA (Hematologist)", "Dr. DB (General Practitioner)"]
+},
+{
+    "name": "Pancreatitis",
+    "symptoms": ["abdominal pain", "nausea", "vomiting"],
+    "precautions": "Avoid alcohol, eat low-fat foods.",
+    "medication": "Pain relievers, enzyme supplements",
+    "diet": "Low-fat diet",
+    "doctors": ["Dr. DC (Gastroenterologist)", "Dr. DD (General Practitioner)"]
+},
+{
+    "name": "Lyme Disease",
+    "symptoms": ["rash", "fever", "joint pain"],
+    "precautions": "Use tick repellents, check for ticks.",
+    "medication": "Antibiotics",
+    "diet": "High-fluid, nutrient-dense diet",
+    "doctors": ["Dr. DE (Infectious Disease Specialist)", "Dr. DF (General Practitioner)"]
+},
+{
+    "name": "Hepatitis",
+    "symptoms": ["jaundice", "abdominal pain", "fatigue"],
+    "precautions": "Vaccination, avoid contaminated food.",
+    "medication": "Antiviral drugs",
+    "diet": "Low-fat, high-carbohydrate diet",
+    "doctors": ["Dr. DG (Hepatologist)", "Dr. DH (Gastroenterologist)"]
+},
+{
+    "name": "Gastroenteritis",
+    "symptoms": ["diarrhea", "vomiting", "stomach cramps"],
+    "precautions": "Practice food hygiene, stay hydrated.",
+    "medication": "Rehydration therapy, antidiarrheals",
+    "diet": "Oral rehydration solutions",
+    "doctors": ["Dr. DI (Gastroenterologist)", "Dr. DJ (General Practitioner)"]
+},
+{
+    "name": "Tonsillitis",
+    "symptoms": ["sore throat", "difficulty swallowing", "fever"],
+    "precautions": "Avoid close contact with infected people.",
+    "medication": "Antibiotics, pain relievers",
+    "diet": "Warm soups, soft foods",
+    "doctors": ["Dr. DK (ENT Specialist)", "Dr. DL (General Practitioner)"]
+},
+{
+    "name": "Rheumatoid Arthritis",
+    "symptoms": ["joint pain", "swelling", "stiffness"],
+    "precautions": "Stay active, avoid repetitive strain.",
+    "medication": "DMARDs, NSAIDs",
+    "diet": "Omega-3-rich foods",
+    "doctors": ["Dr. DM (Rheumatologist)", "Dr. DN (General Practitioner)"]
+},
+{
+    "name": "Lupus",
+    "symptoms": ["fatigue", "joint pain", "rash"],
+    "precautions": "Avoid sunlight, manage stress.",
+    "medication": "Immunosuppressants, corticosteroids",
+    "diet": "Anti-inflammatory diet",
+    "doctors": ["Dr. DO (Rheumatologist)", "Dr. DP (Immunologist)"]
+},
+{
+    "name": "Gallstones",
+    "symptoms": ["abdominal pain", "nausea", "indigestion"],
+    "precautions": "Maintain healthy weight, low-fat diet.",
+    "medication": "Pain relievers, surgery",
+    "diet": "Low-fat, high-fiber foods",
+    "doctors": ["Dr. DQ (Gastroenterologist)", "Dr. DR (Surgeon)"]
+},
+{
+    "name": "Stroke",
+    "symptoms": ["sudden weakness", "slurred speech", "vision loss"],
+    "precautions": "Control blood pressure, avoid smoking.",
+    "medication": "Thrombolytics, antiplatelets",
+    "diet": "Heart-healthy foods",
+    "doctors": ["Dr. DS (Neurologist)", "Dr. DT (Cardiologist)"]
+},
+{
+    "name": "Hypertension",
+    "symptoms": ["headache", "dizziness", "blurred vision"],
+    "precautions": "Reduce salt intake, manage stress.",
+    "medication": "Antihypertensives",
+    "diet": "Low-sodium, potassium-rich foods",
+    "doctors": ["Dr. DU (Cardiologist)", "Dr. DV (General Practitioner)"]
+},
+{
+    "name": "Obesity",
+    "symptoms": ["excess body weight", "fatigue", "joint pain"],
+    "precautions": "Balanced diet, regular exercise.",
+    "medication": "Weight-loss medications",
+    "diet": "Low-calorie, nutrient-dense foods",
+    "doctors": ["Dr. DW (Endocrinologist)", "Dr. DX (Nutritionist)"]
+},
+{
+    "name": "Leprosy",
+    "symptoms": ["skin lesions", "nerve damage", "numbness"],
+    "precautions": "Avoid close contact, early treatment.",
+    "medication": "Antibiotics",
+    "diet": "High-protein, nutrient-dense foods",
+    "doctors": ["Dr. DY (Infectious Disease Specialist)", "Dr. DZ (Dermatologist)"]
+},
+{
+    "name": "Chickenpox",
+    "symptoms": ["rash", "itching", "fever"],
+    "precautions": "Vaccination, avoid scratching.",
+    "medication": "Antihistamines, antiviral drugs",
+    "diet": "Soft, bland foods",
+    "doctors": ["Dr. EA (Pediatrician)", "Dr. EB (General Practitioner)"]
+},
+{
+    "name": "Shingles",
+    "symptoms": ["rash", "nerve pain", "blisters"],
+    "precautions": "Vaccination, avoid close contact.",
+    "medication": "Antiviral drugs, pain relievers",
+    "diet": "High-protein, balanced diet",
+    "doctors": ["Dr. EC (Neurologist)", "Dr. ED (Dermatologist)"]
+},
+{
+    "name": "Polio",
+    "symptoms": ["paralysis", "fever", "muscle weakness"],
+    "precautions": "Vaccination, good hygiene.",
+    "medication": "Supportive care",
+    "diet": "Nutrient-rich foods",
+    "doctors": ["Dr. EE (Pediatrician)", "Dr. EF (Neurologist)"]
+},
+{
+    "name": "Meningitis",
+    "symptoms": ["stiff neck", "fever", "headache"],
+    "precautions": "Vaccination, avoid close contact.",
+    "medication": "Antibiotics, antivirals",
+    "diet": "High-fluid, high-calorie diet",
+    "doctors": ["Dr. EG (Neurologist)", "Dr. EH (Infectious Disease Specialist)"]
+},
+{
+    "name": "Sepsis",
+    "symptoms": ["fever", "rapid heart rate", "confusion"],
+    "precautions": "Early infection treatment, hygiene.",
+    "medication": "Antibiotics, IV fluids",
+    "diet": "High-calorie, nutrient-rich foods",
+    "doctors": ["Dr. EI (Intensivist)", "Dr. EJ (Infectious Disease Specialist)"]
+},
+{
+    "name": "ALS (Amyotrophic Lateral Sclerosis)",
+    "symptoms": ["muscle weakness", "difficulty speaking", "fatigue"],
+    "precautions": "Physical therapy, supportive care.",
+    "medication": "Riluzole",
+    "diet": "High-calorie diet",
+    "doctors": ["Dr. EK (Neurologist)", "Dr. EL (Palliative Care Specialist)"]
+},
+{
+    "name": "Cystic Fibrosis",
+    "symptoms": ["chronic cough", "salty skin", "digestive issues"],
+    "precautions": "Regular exercise, avoid infections.",
+    "medication": "Mucolytics, antibiotics",
+    "diet": "High-calorie, high-fat diet",
+    "doctors": ["Dr. EM (Pulmonologist)", "Dr. EN (Geneticist)"]
+}
+
+    ];
+    
+
+    function getResponse() {
+        const input = document.getElementById('userInput').value.toLowerCase();
+        const chatbox = document.getElementById('chatbox');
+        let response = '';
+        let diseaseFound = false;
+
+        diseases.forEach(disease => {
+            let matchedSymptoms = disease.symptoms.filter(symptom => input.includes(symptom));
+            if (matchedSymptoms.length > 0) {
+                diseaseFound = true;
+                response = `
+                    <div class="response">
+                        <strong>Predicted Disease: </strong>${disease.name}<br>
+                        <strong>Precautions: </strong>${disease.precautions}<br>
+                        <strong>Medication: </strong>${disease.medication}<br>
+                        <strong>Diet: </strong>${disease.diet}<br>
+                        <strong>Doctors Suggestion: </strong><br>
+                        ${disease.doctors.join('<br>')}<br>
+                        <button onclick="showAppointmentForm()">Book Appointment</button>
+                    </div>
+                `;
+            }
+        });
+
+        if (!diseaseFound) {
+            response = '<div class="response">Sorry, I could not find any matching diseases. Please provide more details or consult a doctor.</div>';
+        }
+
+        chatbox.innerHTML = response;
+    }
+
+    function showAppointmentForm() {
+        document.getElementById('appointmentForm').style.display = 'block';
+    }
+
+    document.getElementById('appointmentDetailsForm').addEventListener('submit', function(event) {
+        event.preventDefault();
+
+        const name = document.getElementById('userName').value;
+        const date = document.getElementById('appointmentDate').value;
+        const time = document.getElementById('appointmentTime').value;
+
+        const appointmentDetails = `
+            <div class="appointment-details">
+                <strong>Appointment Booked Successfully!</strong><br>
+                <strong>Name:</strong> ${name}<br>
+                <strong>Date:</strong> ${date}<br>
+                <strong>Time:</strong> ${time}
+            </div>
+        `;
+        
+        document.getElementById('appointmentDetails').innerHTML = appointmentDetails;
+        document.getElementById('appointmentForm').style.display = 'none'; // Hide the form after booking
+    });
+</script>
+
+</body>
+</html>
