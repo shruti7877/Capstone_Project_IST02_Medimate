@@ -1,0 +1,252 @@
+{
+  "diseases": [
+    {
+      "name": "Flu",
+      "symptoms": ["fever", "chills", "cough", "fatigue", "body aches"],
+      "precautions": "Rest, stay hydrated, take fever-reducing medications.",
+      "medication": "Paracetamol, Cough Syrup, Nasal Decongestants",
+      "diet": "Drink warm fluids, eat soups, and avoid cold food.",
+      "doctor": "Dr. A (General Practitioner)"
+    },
+    {
+      "name": "Cold",
+      "symptoms": ["runny nose", "sneezing", "sore throat", "headache"],
+      "precautions": "Rest, drink fluids, avoid exposure to cold.",
+      "medication": "Pain relievers, Nasal Spray",
+      "diet": "Warm tea, honey, and citrus fruits.",
+      "doctor": "Dr. A (General Practitioner)"
+    },
+    {
+      "name": "Stomach Infection",
+      "symptoms": ["stomach pain", "diarrhea", "nausea", "vomiting"],
+      "precautions": "Drink plenty of fluids, avoid heavy meals.",
+      "medication": "Antibiotics (if bacterial), Oral Rehydration Salts",
+      "diet": "BRAT Diet (Bananas, Rice, Applesauce, Toast)",
+      "doctor": "Dr. B (Gastroenterologist)"
+    },
+    {
+      "name": "Pneumonia",
+      "symptoms": ["cough", "fever", "shortness of breath", "fatigue", "chest pain"],
+      "precautions": "Rest, antibiotics (if bacterial), stay hydrated.",
+      "medication": "Antibiotics, Cough Syrup",
+      "diet": "Drink warm fluids, rest, and eat easy-to-digest foods.",
+      "doctor": "Dr. C (Pulmonologist)"
+    },
+    {
+      "name": "Diabetes",
+      "symptoms": ["increased thirst", "frequent urination", "fatigue", "blurred vision"],
+      "precautions": "Monitor blood sugar levels, eat balanced meals.",
+      "medication": "Insulin, Oral Hypoglycemics",
+      "diet": "Low-sugar, high-fiber foods.",
+      "doctor": "Dr. D (Endocrinologist)"
+    },
+    {
+      "name": "Asthma",
+      "symptoms": ["wheezing", "shortness of breath", "coughing", "chest tightness"],
+      "precautions": "Avoid allergens, use inhalers as prescribed.",
+      "medication": "Inhalers, Bronchodilators",
+      "diet": "Avoid allergens, eat anti-inflammatory foods.",
+      "doctor": "Dr. E (Pulmonologist)"
+    },
+    {
+      "name": "Heart Disease",
+      "symptoms": ["chest pain", "shortness of breath", "fatigue", "swelling in legs"],
+      "precautions": "Avoid high-fat foods, exercise regularly.",
+      "medication": "Beta-blockers, Statins",
+      "diet": "Low-fat, low-sodium foods.",
+      "doctor": "Dr. F (Cardiologist)"
+    },
+    {
+      "name": "Hypertension",
+      "symptoms": ["headache", "shortness of breath", "dizziness", "chest pain"],
+      "precautions": "Monitor blood pressure, avoid salty foods.",
+      "medication": "ACE inhibitors, Diuretics",
+      "diet": "Low-sodium, low-fat foods.",
+      "doctor": "Dr. G (Cardiologist)"
+    },
+    {
+      "name": "Migraine",
+      "symptoms": ["severe headache", "nausea", "vomiting", "sensitivity to light"],
+      "precautions": "Rest in a dark room, avoid triggers.",
+      "medication": "Pain relievers, Triptans",
+      "diet": "Avoid caffeine, alcohol, and chocolate.",
+      "doctor": "Dr. H (Neurologist)"
+    },
+    {
+      "name": "Arthritis",
+      "symptoms": ["joint pain", "stiffness", "swelling", "reduced mobility"],
+      "precautions": "Exercise regularly, avoid overstraining joints.",
+      "medication": "NSAIDs, Steroid injections",
+      "diet": "Anti-inflammatory foods, omega-3 rich foods.",
+      "doctor": "Dr. I (Rheumatologist)"
+    },
+    {
+      "name": "Gastritis",
+      "symptoms": ["stomach pain", "bloating", "nausea", "vomiting"],
+      "precautions": "Avoid spicy foods, eat smaller meals.",
+      "medication": "Antacids, Proton Pump Inhibitors",
+      "diet": "Avoid alcohol, coffee, and acidic foods.",
+      "doctor": "Dr. J (Gastroenterologist)"
+    },
+    {
+      "name": "Tuberculosis",
+      "symptoms": ["persistent cough", "fever", "night sweats", "weight loss"],
+      "precautions": "Follow TB treatment, avoid public spaces.",
+      "medication": "Antibiotics (Rifampicin, Isoniazid)",
+      "diet": "High-calorie, protein-rich foods.",
+      "doctor": "Dr. K (Pulmonologist)"
+    },
+    {
+      "name": "Cancer",
+      "symptoms": ["unexplained weight loss", "fatigue", "pain", "lumps"],
+      "precautions": "Early screening, avoid smoking.",
+      "medication": "Chemotherapy, Radiation",
+      "diet": "Eat plenty of fruits and vegetables, avoid processed foods.",
+      "doctor": "Dr. L (Oncologist)"
+    },
+    {
+      "name": "HIV/AIDS",
+      "symptoms": ["fever", "night sweats", "weight loss", "swollen lymph nodes"],
+      "precautions": "Use protection, avoid sharing needles.",
+      "medication": "Antiretroviral therapy (ART)",
+      "diet": "Nutritious, balanced meals.",
+      "doctor": "Dr. M (Infectious Disease Specialist)"
+    },
+    {
+      "name": "Depression",
+      "symptoms": ["sadness", "fatigue", "sleep disturbances", "loss of interest"],
+      "precautions": "Seek therapy, engage in physical activity.",
+      "medication": "Antidepressants, Antianxiety medications",
+      "diet": "Omega-3 rich foods, low-sugar foods.",
+      "doctor": "Dr. N (Psychiatrist)"
+    },
+    {
+      "name": "Anxiety",
+      "symptoms": ["restlessness", "nausea", "sweating", "racing heart"],
+      "precautions": "Practice relaxation techniques, avoid caffeine.",
+      "medication": "Antianxiety medications",
+      "diet": "Balanced diet with B vitamins, magnesium.",
+      "doctor": "Dr. O (Psychiatrist)"
+    },
+    {
+      "name": "Chronic Obstructive Pulmonary Disease (COPD)",
+      "symptoms": ["shortness of breath", "chronic cough", "wheezing", "fatigue"],
+      "precautions": "Avoid smoking, use bronchodilators.",
+      "medication": "Bronchodilators, Steroids",
+      "diet": "High-protein foods, antioxidants.",
+      "doctor": "Dr. P (Pulmonologist)"
+    },
+    {
+      "name": "Panic Disorder",
+      "symptoms": ["rapid heartbeat", "shortness of breath", "chest pain", "dizziness"],
+      "precautions": "Seek therapy, avoid stress triggers.",
+      "medication": "SSRIs, Benzodiazepines",
+      "diet": "Avoid caffeine, alcohol, and sugar.",
+      "doctor": "Dr. Q (Psychiatrist)"
+    },
+    {
+      "name": "Eczema",
+      "symptoms": ["itchy skin", "red rashes", "dry patches", "swelling"],
+      "precautions": "Avoid irritants, keep skin moisturized.",
+      "medication": "Topical steroids, antihistamines",
+      "diet": "Avoid allergens like nuts, dairy.",
+      "doctor": "Dr. R (Dermatologist)"
+    },
+    {
+      "name": "Psoriasis",
+      "symptoms": ["scaly skin", "itching", "red patches", "swelling"],
+      "precautions": "Avoid triggers, moisturize skin.",
+      "medication": "Topical treatments, Phototherapy",
+      "diet": "Anti-inflammatory foods.",
+      "doctor": "Dr. S (Dermatologist)"
+    },
+    {
+      "name": "Kidney Disease",
+      "symptoms": ["swelling", "fatigue", "shortness of breath", "blood in urine"],
+      "precautions": "Control blood pressure, avoid salt.",
+      "medication": "ACE inhibitors, Diuretics",
+      "diet": "Low-protein, low-sodium foods.",
+      "doctor": "Dr. T (Nephrologist)"
+    },
+    {
+      "name": "Osteoporosis",
+      "symptoms": ["bone pain", "reduced height", "back pain", "fractures"],
+      "precautions": "Exercise, increase calcium and vitamin D intake.",
+      "medication": "Calcium supplements, Bisphosphonates",
+      "diet": "Calcium-rich foods, vitamin D-rich foods.",
+      "doctor": "Dr. U (Orthopedist)"
+    },
+    {
+      "name": "Multiple Sclerosis",
+      "symptoms": ["numbness", "weakness", "vision problems", "balance issues"],
+      "precautions": "Physical therapy, medications for symptom management.",
+      "medication": "Steroids, Interferons",
+      "diet": "Anti-inflammatory foods.",
+      "doctor": "Dr. V (Neurologist)"
+    },
+    {
+      "name": "Hepatitis",
+      "symptoms": ["jaundice", "abdominal pain", "fatigue", "nausea"],
+      "precautions": "Avoid alcohol, use proper sanitation.",
+      "medication": "Antiviral medications",
+      "diet": "Liver-friendly foods, low-fat diet.",
+      "doctor": "Dr. W (Gastroenterologist)"
+    },
+    {
+      "name": "Gallstones",
+      "symptoms": ["abdominal pain", "nausea", "vomiting", "indigestion"],
+      "precautions": "Eat a low-fat diet, avoid rapid weight loss.",
+      "medication": "Pain relievers, ursodeoxycholic acid",
+      "diet": "Low-fat, high-fiber foods.",
+      "doctor": "Dr. X (Gastroenterologist)"
+    },
+    {
+      "name": "Celiac Disease",
+      "symptoms": ["diarrhea", "bloating", "fatigue", "rash"],
+      "precautions": "Avoid gluten-containing foods.",
+      "medication": "No specific medication; gluten-free diet.",
+      "diet": "Gluten-free foods.",
+      "doctor": "Dr. Y (Gastroenterologist)"
+    },
+    {
+      "name": "Lupus",
+      "symptoms": ["joint pain", "skin rashes", "fever", "fatigue"],
+      "precautions": "Avoid sunlight, manage stress.",
+      "medication": "Immunosuppressants, NSAIDs",
+      "diet": "Anti-inflammatory foods.",
+      "doctor": "Dr. Z (Rheumatologist)"
+    },
+    {
+      "name": "Anemia",
+      "symptoms": ["fatigue", "weakness", "pale skin", "dizziness"],
+      "precautions": "Eat iron-rich foods.",
+      "medication": "Iron supplements",
+      "diet": "Iron-rich foods (red meat, leafy greens).",
+      "doctor": "Dr. AA (Hematologist)"
+    },
+    {
+      "name": "Cholera",
+      "symptoms": ["severe diarrhea", "vomiting", "dehydration", "muscle cramps"],
+      "precautions": "Avoid drinking unclean water.",
+      "medication": "Oral rehydration salts, antibiotics",
+      "diet": "Rehydration fluids.",
+      "doctor": "Dr. AB (Infectious Disease Specialist)"
+    },
+    {
+      "name": "Epilepsy",
+      "symptoms": ["seizures", "confusion", "loss of consciousness"],
+      "precautions": "Avoid triggers, use medication.",
+      "medication": "Anticonvulsants",
+      "diet": "Ketogenic diet (under medical supervision).",
+      "doctor": "Dr. AC (Neurologist)"
+    },
+    {
+      "name": "Parkinson's Disease",
+      "symptoms": ["tremors", "slow movement", "stiff muscles", "balance problems"],
+      "precautions": "Physical therapy, avoid falls.",
+      "medication": "Levodopa, Dopamine Agonists",
+      "diet": "Balanced diet, high fiber.",
+      "doctor": "Dr. AD (Neurologist)"
+    }
+  ]
+}

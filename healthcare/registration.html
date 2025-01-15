@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Registration Page</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: url("register_1.jpg") no-repeat center center fixed; /* Replace with your image path */
+      background-size: cover; /* Ensures the background covers the entire page */
+      color: #333;
+      margin: 0;
+      padding: 0;
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .container {
+      width: 50%;
+      padding: 20px;
+      border-radius: 8px;
+      background: rgba(255, 255, 255, 0.3); /* Transparent white background */
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    h2 {
+      text-align: center;
+      font-size: 24px;
+      font-weight: bold;
+      color: #000080;
+      text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.5);
+    }
+
+    form {
+      display: grid;
+      grid-template-columns: 150px auto;
+      gap: 10px 15px;
+      align-items: center;
+      width: 100%;
+    }
+
+    label {
+      color: black;
+      font-weight: bold;
+      font-size: 20px;
+      text-align: left;
+    }
+
+    input[type="text"], input[type="email"], input[type="date"], input[type="password"], input[type="tel"] {
+      width: 100%;
+      max-width: 300px;
+      padding: 10px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      font-size: 16px;
+      color: black;
+      background: linear-gradient(45deg, #ffb6c1, #add8e6);
+      background-color: rgba(255, 255, 255, 0.8);
+    }
+
+    input[type="text"]:hover, input[type="email"]:hover, input[type="date"]:hover, 
+    input[type="password"]:hover, input[type="tel"]:hover {
+      background-color: #f5f5f5;
+      border-color: #aaa;
+    }
+
+    input[type="text"]:focus, input[type="email"]:focus, input[type="date"]:focus, 
+    input[type="password"]:focus, input[type="tel"]:focus {
+      background-color: #fff;
+      border-color: #6a82fb;
+      box-shadow: 0 0 8px rgba(106, 130, 251, 0.5);
+      outline: none;
+    }
+
+    .btn {
+      background: linear-gradient(45deg, #a8e063, #56ab2f); /* Gradient from light green to dark green */
+      color: #fff;
+      padding: 10px 20px;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 16px;
+      transition: background 0.3s ease; /* Smooth transition */
+    }
+
+    .btn:hover {
+      background: linear-gradient(45deg, #56ab2f, #a8e063); /* Reversed gradient for hover effect */
+    }
+
+    p {
+      color: red;
+      margin-top: 10px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h2>Registration Form</h2>
+    <form id="registrationForm">
+      <label for="name">Name:</label>
+      <input type="text" id="name" name="name" required>
+      
+      <label for="dob">Date of Birth:</label>
+      <input type="date" id="dob" name="dob" required>
+      
+      <label for="phone">Phone Number:</label>
+      <input type="tel" id="phone" name="phone" required>
+      
+      <label for="email">Email:</label>
+      <input type="email" id="email" name="email" required>
+      
+      <label for="password">Password:</label>
+      <input type="password" id="password" name="password" required>
+      
+      <button type="submit" class="btn">Register</button>
+    </form>
+    <p id="error"></p>
+  </div>
+
+<script>
+  document.getElementById('registrationForm').addEventListener('submit', function(event) {
+    event.preventDefault();
+
+    const name = document.getElementById('name').value.trim();
+    const dob = document.getElementById('dob').value;
+    const phone = document.getElementById('phone').value.trim();
+    const email = document.getElementById('email').value.trim();
+    const password = document.getElementById('password').value.trim();
+    const errorElement = document.getElementById('error');
+
+    errorElement.textContent = '';
+
+    // Validate name
+    const namePattern = /^[A-Za-z\s]+$/;
+    if (!namePattern.test(name)) {
+      errorElement.textContent = "Name should contain only alphabets and spaces.";
+      return;
+    }
+
+    // Validate email
+    const emailPattern = /^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$/;
+    const emailAlphanumericCheck = /^(?=.*[a-zA-Z])(?=.*\d)/;
+    const emailUsername = email.split("@")[0];
+    if (!emailPattern.test(email) || !emailAlphanumericCheck.test(emailUsername)) {
+      errorElement.textContent = "Email must be valid and contain both letters and numbers before '@'.";
+      return;
+    }
+
+    // Validate phone number (10 digits)
+    const phonePattern = /^\d{10}$/;
+    if (!phonePattern.test(phone)) {
+      errorElement.textContent = "Please enter a valid 10-digit phone number.";
+      return;
+    }
+
+    // Validate password
+    const passwordPattern = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*()_\-+=\[\]{};:'",.<>?/\\|~`])[A-Za-z\d!@#$%^&*()_\-+=\[\]{};:'",.<>?/\\|~`]{6,}$/;
+    if (!passwordPattern.test(password)) {
+      errorElement.textContent = "Password must be at least 6 characters long, and contain at least one uppercase letter, one lowercase letter, one number, and one special character.";
+      return;
+    }
+
+    // Store email and password in localStorage
+    localStorage.setItem('email', email);
+    localStorage.setItem('password', password);
+
+    alert('Registration successful!');
+    window.location.href = 'login.html'; // Redirect to login page
+  });
+</script>
+</body>
+</html>

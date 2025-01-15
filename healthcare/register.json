@@ -1,0 +1,65 @@
+document.getElementById('registerForm').addEventListener('submit', function (e) {
+    e.preventDefault();
+
+    const fname = document.getElementById('fname').value.trim();
+    const lname = document.getElementById('lname').value.trim();
+    const phone = document.getElementById('phone').value.trim();
+    const email = document.getElementById('email').value.trim();
+    const password = document.getElementById('password').value.trim();
+    const confirmPassword = document.getElementById('confirmPassword').value.trim();
+
+    // Regular expressions for validation
+    const nameRegex = /^[a-zA-Z\s]+$/; // Allows alphabets and spaces
+    const phoneRegex = /^[0-9]+$/;     // Allows only digits
+
+    // Validate first name
+    if (!nameRegex.test(fname)) {
+        alert("First name should only contain alphabets.");
+        return;
+    }
+
+    // Validate last name
+    if (!nameRegex.test(lname)) {
+        alert("Last name should only contain alphabets.");
+        return;
+    }
+
+    // Validate phone number
+    if (!phoneRegex.test(phone)) {
+        alert("Phone number should only contain numbers.");
+        return;
+    }
+
+    // Validate email
+    if (!email.includes("@") || !email.includes(".")) {
+        alert("Please enter a valid email address.");
+        return;
+    }
+
+    if (password !== confirmPassword) {
+        alert("Passwords do not match");
+        return;
+    }
+
+    const user = {
+        firstName: fname,
+        lastName: lname,
+        phone: phone,
+        email: email,
+        password: password
+    };
+
+    fetch('/register', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(user)
+    }).then(response => {
+        if (response.ok) {
+            window.location.href = 'login.html'; // Redirect to login page
+        } else {
+            alert('Registration failed');
+        }
+    });
+});
